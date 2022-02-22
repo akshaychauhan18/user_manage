@@ -30,7 +30,8 @@ class FriendsController < ApplicationController
     #@friend = Friend.new(friend_params)
     @friend = current_user.friends.build(friend_params)
     respond_to do |format|
-      if @friend.save
+      # if is_created
+      if @friend.friend_create
         format.html { redirect_to @friend, notice: "Friend was successfully created." }
         format.json { render :show, status: :created, location: @friend }
       else
@@ -44,7 +45,7 @@ class FriendsController < ApplicationController
   # PATCH/PUT /friends/1.json
   def update
     respond_to do |format|
-      if @friend.update(friend_params)
+      if @friend.friend_update(friend_params)
         format.html { redirect_to @friend, notice: "Friend was successfully updated." }
         format.json { render :show, status: :ok, location: @friend }
       else
@@ -57,11 +58,15 @@ class FriendsController < ApplicationController
   # DELETE /friends/1
   # DELETE /friends/1.json
   def destroy
-    Friend.delete1(@friend.id)
-    # @friend.destroy
-    respond_to do |format|
-      format.html { redirect_to friends_url, notice: "Friend was successfully destroyed." }
-      format.json { head :no_content }
+    # Friend.method_name(@friend.id)
+    if @friend.friend_delete()
+      # if @friend.method_name
+      respond_to do |format|
+        format.html { redirect_to friends_url, notice: "Friend was successfully destroyed." }
+        format.json { head :no_content }
+      end
+    else
+      format.html { redirect_to friends_url, notice: "Friend was not found." }
     end
   end
 

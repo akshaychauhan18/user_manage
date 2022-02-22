@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   let(:user) { build(:random_user) }
+  let(:new_user) { create(:random_user) }
+
   describe "schema" do
     it { should have_db_column(:email).of_type(:string) }
     it { should have_db_column(:encrypted_password).of_type(:string) }
@@ -18,15 +20,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  it "is database authenticable" do
-    user = User.create(
-      email: "test@example.com",
-      password: "password123",
-      password_confirmation: "password123",
-    )
-    expect(user.valid_password?("password123")).to be_truthy
-  end
-
   describe "user registration" do
     it "name, email, password and password_You can register if confirmation exists" do
       user = build(:random_user)
@@ -36,5 +29,9 @@ RSpec.describe User, type: :model do
 
   describe "associations" do
     it { should have_many(:friends) }
+  end
+
+  it "is database authenticable" do
+    expect(new_user.valid_password?(new_user.password)).to be_truthy
   end
 end

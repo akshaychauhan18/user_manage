@@ -1,8 +1,8 @@
 require "rails_helper"
 require "devise"
 RSpec.describe "Friends", type: :request do
-  let (:friends) { build(:friend) }
-  let(:current_user) { build(:random_user) }
+  let (:friends) { create(:friend) }
+  let(:current_user) { create(:random_user) }
 
   before :each do
     login_as current_user
@@ -20,20 +20,16 @@ RSpec.describe "Friends", type: :request do
     end
 
     it "check edit" do
-      puts friends.inspect
-
       get edit_friend_path(friends)
-
-      # expect(response).to be_successful
       expect(response).to have_http_status(302)
     end
 
     it "checks for the friend" do
       get friend_path(friends)
       expect(response).to be_successful
-      # expect(response).to have_http_status(:success)
     end
   end
+
   describe "friend /destroy" do
     context "success" do
       it "deletes the user" do
@@ -43,11 +39,12 @@ RSpec.describe "Friends", type: :request do
       end
     end
   end
+
   describe "friend /update" do
     context "success" do
       it "updates the user" do
         friends.twitter = "akshay@hsd"
-        patch "/friends/#{friends.id}"
+        put "/friends/#{friends.id}"
         expect(response).to have_http_status(302)
         expect(response).to redirect_to(friends_path)
       end
